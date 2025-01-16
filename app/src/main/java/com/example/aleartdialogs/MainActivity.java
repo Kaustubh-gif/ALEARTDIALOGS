@@ -1,9 +1,14 @@
 package com.example.aleartdialogs;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -12,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.example.aleartdialogs.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,14 +45,76 @@ public class MainActivity extends AppCompatActivity {
                 builder.setTitle("Exam Form Submission");
                 builder.setMessage("Are you sure you want to submit?");
                 builder.setIcon(R.drawable.ic_launcher_background);
-                builder.setPositiveButton("Yes",new PositiveButtonClickListener());
-                builder.setNegativeButton("No",new NegativeButtonClickListener());
-                builder.setNeutralButton("Ok", new NeutralButtonClickListener());
+                builder.setPositiveButton("Yes",new AlertDialogButtonClickListener());
+                builder.setNegativeButton("No",new AlertDialogButtonClickListener());
+
+                //pass the object of anonymous class using dialog interface
+                builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(MainActivity.this,"Neutral Button Clicked" + i , Toast.LENGTH_LONG).show();
+                    }
+                });
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
         });
+
+        btnTimePickerDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this,
+                        new TimePickerDialogButtonClickListener(),
+                        11,
+                        34,
+                        true);
+                timePickerDialog.show();
+            }
+        });
+
+
+        btnDatePickerDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this,
+                        new DatePickerDialogButtonClickListener(),
+                        2024,
+                        02,
+                        9);
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    class TimePickerDialogButtonClickListener implements TimePickerDialog.OnTimeSetListener{
+
+        @Override
+        public void onTimeSet(TimePicker timePicker, int i, int i1) {
+            Log.e("tag", "time picker " + timePicker + "   " + i + "  " + i1);
+        }
+    }
+
+
+    class DatePickerDialogButtonClickListener implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            Log.e("tag","date picker " + datePicker + " " + i + " " + i1 + " " + i2);
+        }
+    }
+
+    class AlertDialogButtonClickListener implements DialogInterface.OnClickListener{
+        @Override
+        public void onClick(DialogInterface dialogInterface, int which) {
+            if(which == -1){
+                Toast.makeText(MainActivity.this,"Positive Button Clicked" + which,Toast.LENGTH_LONG).show();
+            } else if (which == -2) {
+                Toast.makeText(MainActivity.this,"Negative Button Clicked" + which, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MainActivity.this,"Neutral Button Clicked" + which, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     class PositiveButtonClickListener implements DialogInterface.OnClickListener{
